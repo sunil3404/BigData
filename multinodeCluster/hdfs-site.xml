@@ -1,0 +1,13 @@
+
+<configuration>
+	<!-- namenodes metadata location -->
+	<property>
+		<name>dfs.namenode.name.dir</name>
+		<value>file:/home/ocp/hadoop_store/hdfs/namenode2</value>
+	</property>
+	<!-- datanodes data location -->
+	<property>
+		<name>dfs.datanode.data.dir</name>
+		<value>file:/home/ocp/hadoop_store/hdfs/datanode2</value>
+	</property>
+</configuration>

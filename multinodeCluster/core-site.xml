@@ -1,0 +1,8 @@
+core-site.xml
+--------------
+<configuration>
+	<property>
+		<name>fs.defaultFS</name>
+		<value>hdfs://<master IP address>:8020</value>
+	</property>
+</configuration>
