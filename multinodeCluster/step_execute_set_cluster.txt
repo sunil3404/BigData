@@ -1,0 +1,66 @@
+Required softwares and versions
+
+- Java version 1.8
+
+step 1- Download hadoop as shown below
+hadoop version - hadoop-2.7.1
+link -> wget https://archive.apache.org/dist/hadoop/common/hadoop-2.7.1/hadoop-2.7.1.tar.gz
+
+step 2 -> untar the above tar.gz
+tar - xvzf <filename>
+
+follow step 1 and step 2 on both dn1 and dn2
+
+step 3 :
+create soft-link using ln -shown
+ln -s hadoop-2.7.1 hadoop
+check => ls -l hadoop
+
+step 4 : Hadoop configuration in path 
+
+cd /hadoop-2.7.1/etc/hadoop/
+
+following files need config change
+	- core-site.xml
+	- hdfs-site.xml -> after adding conf to this file follow step 5
+	- mapred-site.xml.template ->  step 7
+	- yarn-site.xml
+	
+step 5: create folder structure as added in hdfs-site.xml
+mkdir -p /home/ocp/hadoop_store/hdfs/namenode2
+
+
+Step 6: create a cp of the file as mapred-site.xml.template as mapred-site.xml
+and add the config as in file mapred-site.xml
+
+step 7: add config to yarn-site.xml
+
+step 8: edit slaves file which will contain ip address of dn1 and dn2 nodes
+<ip1>
+<ip2>
+
+step 9 : create soft links as step 2 in dn1 and dn2 
+	- cp all the .xml files in the same location in dn1 and dn2 as in namenode
+ex : scp core-site.xml mapred-site.xml hdfs-site.xml yarn-site.xml dn1:/home/ocp/hadoop/etc/hadoop/ .
+	 scp core-site.xml mapred-site.xml hdfs-site.xml yarn-site.xml dn2:/home/ocp/hadoop/etc/hadoop/ .
+
+step 10:  create datanode folder structure and set permission on both dn1 and dn2
+mkdir -p  /home/ocp/hadoop_store/hdfs/datanode2
+chmod 755 /home/ocp/hadoop_store/hdfs/datanode2
+
+step 11 : format namenode and start all services on namenode (nn1)
+- hdfs namenode -format
+
+step 12 : start name node on nn1
+	- start-dfs.sh
+
+after step 12 check if the data nodes are started on the dn1 and dn2 
+if not follow below steps
+
+step 13  : navigate to location  on 
+	- cd /home/ocp/hadoop_store/hdfs/datanode2
+	- rm -rf *
+	- hadoop-daemon.sh start datanode
+
+step 14 : start-yarn.sh in namenode
+	- start-yarn.sh

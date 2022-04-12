@@ -1,0 +1,23 @@
+
+namenode - master daemons will run on this
+
+nn1 -> 
+master daemons :
+	hdfs - namenode
+	yarn - resource manager
+	
+slave daemons will run on below nodes
+	dn1 -> IP 
+	dn2 -> IP
+
+slave daemons:
+	hdfs -> datanode
+	YARN -> Nodemanager
+	
+
+
+set UP DNS on nodes in the path /etc/hosts/
+
+	
+
+	
