@@ -81,8 +81,8 @@ Example:
 
 step 9 : create soft links as step 2 in dn1 and dn2 
 	- cp all the .xml files in the same location in dn1 and dn2 as in namenode
-ex : scp core-site.xml mapred-site.xml hdfs-site.xml yarn-site.xml dn1:/home/ocp/hadoop/etc/hadoop/ .
-	 scp core-site.xml mapred-site.xml hdfs-site.xml yarn-site.xml dn2:/home/ocp/hadoop/etc/hadoop/ .
+ex : scp core-site.xml mapred-site.xml hdfs-site.xml yarn-site.xml dn1:/home/<username>/hadoop/etc/hadoop/ .
+	 scp core-site.xml mapred-site.xml hdfs-site.xml yarn-site.xml dn2:/home/<username>/hadoop/etc/hadoop/ .
 
 step 10:  create datanode folder structure and set permission on both datanode1 and datanode2
 mkdir -p /mnt/sinkaas_nfs/hadoop_store/hdfs/datanode2
@@ -99,7 +99,7 @@ after step 12 check if the data nodes are started on the datanode1 and datanode2
 if not follow below steps
 
 step 13  : navigate to location  on 
-	- cd /home/ocp/hadoop_store/hdfs/datanode2
+	- cd /home/<username>/hadoop_store/hdfs/datanode2
 	- rm -rf *
 	- hadoop-daemon.sh start datanode
 
