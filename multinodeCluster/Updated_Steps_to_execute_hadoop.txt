@@ -1,0 +1,124 @@
+Required softwares and versions
+
+- Java version 1.8
+
+ssh authentication is passwordless. Create user <username> and then enable ssh passwordless authentication
+
+Steps to create user :
+
+useradd <username>
+passwd <username> Ch4ll3ng3M3!
+gpasswd -a <username> wheel
+
+We are using following servers : <master node>, <slaveNode1> and <slaveNode2>
+
+<namenode IP> is the master node or namenode
+
+<slaveNode IP> and <slavenodeIP> are the data nodes
+
+Enable passowordless ssh authentication: Login as <username> into any server lets say 
+
+Generate ssh keys :
+ssh-keygen -t rsa -b 4096 -C "emailId"
+
+Copy Public key to other server:
+ssh-copy-id <masterNode>
+ssh-copy-id <slaveNode1>
+ssh-copy-id <slaveNode2>
+
+
+Hadoop Installation Steps need to be executed using <username>
+
+step 1- Download hadoop as shown below on master node
+hadoop version - hadoop-2.7.1
+
+cd /mnt/sinkaas_nfs/
+wget https://archive.apache.org/dist/hadoop/common/hadoop-2.7.1/hadoop-2.7.1.tar.gz
+
+
+step 2 -> untar the above tar.gz
+tar - xvzf <filename>
+
+follow step 1 and step 2 on both datanode1 and datanode2
+
+step 3 :
+create soft-link using ln -shown
+ln -s /mnt/sinkaas_nfs/hadoop-2.7.1 /home/<username>/hadoop
+check => ls -l /home/<username>/hadoop
+
+for <username> setup PATH variable and JAVA_HOME. Add following commands to ~/.bashrc
+
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0
+export PATH=$PATH:/home/<username>/hadoop/bin:/home/<username>/hadoop/sbin
+
+step 4 : Hadoop configuration in path 
+
+cd /home/<username>/hadoop/etc/hadoop/
+
+following files need config change
+	- core-site.xml
+	- hdfs-site.xml -> after adding conf to this file follow step 5
+	- mapred-site.xml.template ->  step 7
+	- yarn-site.xml
+	
+step 5: create folder structure as added in hdfs-site.xml
+mkdir -p /mnt/sinkaas_nfs/hadoop_store/hdfs/namenode2
+ln -s /mnt/sinkaas_nfs/hadoop_store/ /home/<username>/hadoop_store
+
+
+Step 6: create a cp of the file as mapred-site.xml.template as mapred-site.xml
+and add the config as in file mapred-site.xml
+
+step 7: add config to yarn-site.xml
+
+step 8: edit slaves file which will contain ip address of dn1 and dn2 nodes
+<ip1>
+<ip2>
+Example:
+[<username>@masterNode ~]$ cat hadoop/etc/hadoop/slaves
+<slaveNode1>
+<slaveNode2>
+
+step 9 : create soft links as step 2 in dn1 and dn2 
+	- cp all the .xml files in the same location in dn1 and dn2 as in namenode
+ex : scp core-site.xml mapred-site.xml hdfs-site.xml yarn-site.xml dn1:/home/ocp/hadoop/etc/hadoop/ .
+	 scp core-site.xml mapred-site.xml hdfs-site.xml yarn-site.xml dn2:/home/ocp/hadoop/etc/hadoop/ .
+
+step 10:  create datanode folder structure and set permission on both datanode1 and datanode2
+mkdir -p /mnt/sinkaas_nfs/hadoop_store/hdfs/datanode2
+chmod 755 /mnt/sinkaas_nfs/hadoop_store/hdfs/datanode2
+ln -s /mnt/sinkaas_nfs/hadoop_store/ /home/<username>/hadoop_store
+
+step 11 : format namenode and start all services on namenode (nn1)
+- hdfs namenode -format
+
+step 12 : start name node on nn1
+	- start-dfs.sh
+
+after step 12 check if the data nodes are started on the datanode1 and datanode2 
+if not follow below steps
+
+step 13  : navigate to location  on 
+	- cd /home/ocp/hadoop_store/hdfs/datanode2
+	- rm -rf *
+	- hadoop-daemon.sh start datanode
+
+step 14 : start-yarn.sh in namenode
+	- start-yarn.sh
+	
+Step 15: On the master node check report
+ hdfs dfsadmin -report
+	
+	
+Step 16: Check if UI is launched
+http://<masterNode>:50070/
+
+
+Step 17: Create directory from master node and put file under that:
+hdfs  dfs -mkdir /cmptest
+hdfs dfs -put hdfs_test /cmptest
+
+Verify if directory and file are visible in UI
+
+	
+	
